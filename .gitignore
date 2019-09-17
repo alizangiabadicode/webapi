@@ -1,0 +1,5 @@
+.vscode
+*.db
+bin 
+obj
+Data/UserSeedData.json
