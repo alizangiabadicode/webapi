@@ -12,7 +12,7 @@ jobs:
 
      # deploy the image
      - run: |         
-         docker login --username=$overwatch11m99@gmail.com --password=$78777453A1! registry.heroku.com
+         docker login --username=$overwatch11m99@gmail.com --password=$077a9701-2bde-4778-8344-2b98df605a1a registry.heroku.com
          docker tag aspnetapp registry.heroku.com/$chatappwebapi/web
          docker push registry.heroku.com/$chatappwebapi/web                
          curl https://cli-assets.heroku.com/install.sh | sh
