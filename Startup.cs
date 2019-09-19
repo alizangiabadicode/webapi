@@ -84,7 +84,7 @@ namespace datingapp.api
             services.AddDbContext<DataContext>(e => e.UseSqlite(Configuration.GetConnectionString("first")));
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
-            services.AddTransient<Seed>();
+            // services.AddTransient<Seed>();
             services.AddAutoMapper();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
                 options =>
@@ -102,7 +102,7 @@ namespace datingapp.api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, Seed seed)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
