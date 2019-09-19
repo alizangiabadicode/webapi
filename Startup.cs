@@ -130,7 +130,7 @@ namespace datingapp.api
 
             }
 
-            // app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             // seed.StartSeed();  // ye bar seda zade mishe kolan
             app.UseDefaultFiles();
             app.UseStaticFiles();
