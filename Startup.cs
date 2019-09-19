@@ -35,40 +35,40 @@ namespace datingapp.api
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // public void ConfigureServices(IServiceCollection services)
+        // {
+        //     services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+        //         .AddJsonOptions(
+        //             e =>
+        //             {
+        //                 e.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        //             }
+        //         );
+
+        //     services.AddCors();
+        //     services.AddScoped<UpdateLastOnline>();
+        //     services.Configure<Cloud>(Configuration.GetSection("cloud"));
+        //     services.AddDbContext<DataContext>(e => e.UseMySql(Configuration.GetConnectionString("DefaultConnection")).ConfigureWarnings(w => w.Ignore(CoreEventId.IncludeIgnoredWarning)));
+        //     services.AddScoped<IAuthRepository, AuthRepository>();
+        //     services.AddScoped<IDatingRepository, DatingRepository>();
+        //     services.AddTransient<Seed>();
+        //     services.AddAutoMapper();
+        //     services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+        //         options =>
+        //         {
+        //             options.TokenValidationParameters = new TokenValidationParameters
+        //             {
+        //                 ValidateIssuerSigningKey = true,
+        //                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
+        //                 GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+        //                 ValidateIssuer = false,
+        //                 ValidateAudience = false
+        //             };
+        //         }
+        //     );
+        // }
+
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(
-                    e =>
-                    {
-                        e.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                    }
-                );
-
-            services.AddCors();
-            services.AddScoped<UpdateLastOnline>();
-            services.Configure<Cloud>(Configuration.GetSection("cloud"));
-            services.AddDbContext<DataContext>(e => e.UseMySql(Configuration.GetConnectionString("DefaultConnection")).ConfigureWarnings(w => w.Ignore(CoreEventId.IncludeIgnoredWarning)));
-            services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddScoped<IDatingRepository, DatingRepository>();
-            services.AddTransient<Seed>();
-            services.AddAutoMapper();
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
-                options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
-                        GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                }
-            );
-        }
-
-        public void ConfigureDevelopmentServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(
