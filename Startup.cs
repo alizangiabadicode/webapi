@@ -21,6 +21,7 @@ using Microsoft.IdentityModel.Tokens;
 using datingapp.api.Helpers;
 
 using AutoMapper;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace datingapp.api
 {
@@ -36,24 +37,60 @@ namespace datingapp.api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(
-                    e => {
+                    e =>
+                    {
                         e.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     }
                 );
-            
+
             services.AddCors();
             services.AddScoped<UpdateLastOnline>();
             services.Configure<Cloud>(Configuration.GetSection("cloud"));
-            services.AddDbContext<DataContext>(e=>e.UseSqlite(Configuration.GetConnectionString("first")));
-            services.AddScoped<IAuthRepository,AuthRepository>();
+            services.AddDbContext<DataContext>(e => e.UseMySql(Configuration.GetConnectionString("DefaultConnection")).ConfigureWarnings(w => w.Ignore(CoreEventId.IncludeIgnoredWarning)));
+            services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IDatingRepository, DatingRepository>();
             services.AddTransient<Seed>();
             services.AddAutoMapper();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
-                options =>{
-                    options.TokenValidationParameters = new TokenValidationParameters{
+                options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
+                        GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                }
+            );
+        }
+
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(
+                    e =>
+                    {
+                        e.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                    }
+                );
+
+            services.AddCors();
+            services.AddScoped<UpdateLastOnline>();
+            services.Configure<Cloud>(Configuration.GetSection("cloud"));
+            services.AddDbContext<DataContext>(e => e.UseSqlite(Configuration.GetConnectionString("first")));
+            services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IDatingRepository, DatingRepository>();
+            services.AddTransient<Seed>();
+            services.AddAutoMapper();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+                options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
                         GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
@@ -73,14 +110,16 @@ namespace datingapp.api
             }
             else
             {
-                // app.UseHsts();
+                app.UseHsts();
 
                 app.UseExceptionHandler(
                     builder => builder.Run(
-                        async context =>{
+                        async context =>
+                        {
                             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                             var error = context.Features.Get<IExceptionHandlerFeature>();
-                            if(error != null){
+                            if (error != null)
+                            {
                                 context.Response.ApplicationError(error.Error.Message);
                                 await context.Response.WriteAsync(error.Error.Message);
                             }
@@ -93,9 +132,18 @@ namespace datingapp.api
 
             // app.UseHttpsRedirection();
             // seed.StartSeed();  // ye bar seda zade mishe kolan
-            app.UseCors(e=>e.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseCors(e => e.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseMvc(route =>
+            {
+                route.MapSpaFallbackRoute(name: "spa-fallback", new
+                {
+                    controller = "Fallback",
+                    action = "Index"
+                });
+            });
         }
     }
 }

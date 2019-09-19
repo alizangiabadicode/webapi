@@ -9,14 +9,15 @@ using datingapp.api.Data;
 namespace datingapp.api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20190808110536_addingLikeEntity")]
-    partial class addingLikeEntity
+    [Migration("20190919093421_mysqldb")]
+    partial class mysqldb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.4-rtm-31024");
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("datingapp.api.Models.Like", b =>
                 {
@@ -29,6 +30,36 @@ namespace datingapp.api.Migrations
                     b.HasIndex("LikerId");
 
                     b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("datingapp.api.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Content");
+
+                    b.Property<DateTime?>("DateRead");
+
+                    b.Property<DateTime>("DateSent");
+
+                    b.Property<bool>("IsRead");
+
+                    b.Property<bool>("ReciverDeleted");
+
+                    b.Property<int>("ReciverId");
+
+                    b.Property<bool>("SenderDeleted");
+
+                    b.Property<int>("SenderId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReciverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("datingapp.api.Models.Photo", b =>
@@ -74,7 +105,7 @@ namespace datingapp.api.Migrations
 
                     b.Property<string>("Introduction");
 
-                    b.Property<string>("KnowAs");
+                    b.Property<string>("KnownAs");
 
                     b.Property<DateTime>("LastActive");
 
@@ -113,6 +144,19 @@ namespace datingapp.api.Migrations
                     b.HasOne("datingapp.api.Models.User", "Liker")
                         .WithMany("Likees")
                         .HasForeignKey("LikerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("datingapp.api.Models.Message", b =>
+                {
+                    b.HasOne("datingapp.api.Models.User", "Reciver")
+                        .WithMany("MessagesRecived")
+                        .HasForeignKey("ReciverId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("datingapp.api.Models.User", "Sender")
+                        .WithMany("MessagesSent")
+                        .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
