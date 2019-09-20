@@ -23,10 +23,10 @@ RUN dotnet publish -c Release -o out
 
 FROM microsoft/dotnet:2.2-aspnetcore-runtime
 
-WORKDIR /app
+WORKDIR /app/bin/Release/netcoreapp2.2/
 
-COPY  /app/bin/Release/netcoreapp2.2/ /app
+#COPY  /app/bin/Release/netcoreapp2.2/ /app
 
-COPY /datedb /app
+COPY /datedb /app/bin/Release/netcoreapp2.2
 
 CMD dotnet datingapp.api.dll
