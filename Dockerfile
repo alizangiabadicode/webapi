@@ -25,8 +25,8 @@ FROM microsoft/dotnet:2.2-aspnetcore-runtime
 
 WORKDIR /app
 
-COPY --from=build-env /app/out .
-COPY --from=build-env /app/out .
-COPY /datedb /app/out 
+COPY  /app/bin/Release/netcoreapp2.2/ /app
+
+COPY /datedb /app
 
 CMD dotnet datingapp.api.dll
