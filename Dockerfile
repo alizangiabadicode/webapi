@@ -20,12 +20,13 @@ RUN dotnet publish -c Release -o out
 
 
 # Build runtime image
-EXPOSE 8080/tcp
 
 FROM microsoft/dotnet:2.2-aspnetcore-runtime
 
 WORKDIR /app
 
 COPY --from=build-env /app/out .
+COPY --from=build-env /app/out .
+COPY /datedb /app/out 
 
-CMD dotnet datingapp.api.dll
+ENTRYPOINT ["dotnet", "datingapp.api.dll"]
