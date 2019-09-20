@@ -29,4 +29,4 @@ COPY --from=build-env /app/out .
 COPY --from=build-env /app/out .
 COPY /datedb /app/out 
 
-ENTRYPOINT ["dotnet", "datingapp.api.dll"]
+CMD dotnet datingapp.api.dll
